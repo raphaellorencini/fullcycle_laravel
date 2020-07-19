@@ -1,0 +1,65 @@
+version: '3'
+
+networks:
+    app_network:
+      driver: bridge
+
+services:
+    fullcycle_app:
+        build: .
+        container_name: fullcycle_app
+        entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://fullcycle_db:3306 -timeout 40s ./.docker/entrypoint.sh
+        environment:
+          - DB_HOST=fullcycle_db
+          - DB_PORT=3306
+          - DB_DATABASE=fullcycle_db
+          - DB_USERNAME=root
+          - DB_PASSWORD=root
+        volumes:
+          - .:/var/www
+        networks:
+          - app_network
+        depends_on:
+            - fullcycle_db
+            - fullcycle_redis
+
+    fullcycle_nginx:
+        build: .docker/nginx
+        container_name: fullcycle_nginx
+        restart: always
+        tty: true
+        ports:
+          - "8000:80"
+        volumes:
+          - .:/var/www
+        networks:
+          - app_network
+        depends_on:
+            - fullcycle_app
+
+    fullcycle_db:
+        build: .docker/mysql
+        command: --innodb-use-native-aio=0
+        container_name: fullcycle_db
+        restart: always
+        tty: true
+        ports:
+          - "3306:3306"
+        volumes:
+          - ./.docker/dbdata:/var/lib/mysql
+        environment:
+          - MYSQL_DATABASE=fullcycle_db
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_USER=root
+        networks:
+          - app_network
+
+    fullcycle_redis:
+        image: redis:alpine
+        container_name: fullcycle_redis
+        expose:
+          - 6379
+        networks:
+          - app_network
+
+

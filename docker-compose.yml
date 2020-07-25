@@ -8,6 +8,7 @@ services:
     fullcycle_app:
         build: .
         container_name: fullcycle_app
+        #entrypoint: dockerize -template ./.docker/app/.env:/var/www/.env -wait tcp://fullcycle_db:3306 -timeout 40s ./.docker/entrypoint.sh
         entrypoint: dockerize -wait tcp://fullcycle_db:3306 -timeout 40s ./.docker/entrypoint.sh
         environment:
           - DB_HOST=fullcycle_db

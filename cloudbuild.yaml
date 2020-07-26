@@ -7,6 +7,14 @@ steps:
   name: "gcr.io/cloud-builders/docker"
   args: ["ps"]
 
+- id: "Criando vendor"
+  name: "gcr.io/cloud-builders/docker"
+  args: ["exec", "-t", "fullcycle_app", "mkdir", "/var/www/vendor"]
+
+- id: "Permissão 755 para vendor"
+  name: "gcr.io/cloud-builders/docker"
+  args: ["exec", "-t", "fullcycle_app", "chmod", "-R", "755", "/var/www/vendor"]
+
 - id: "Rodando composer"
   name: "gcr.io/cloud-builders/docker"
   args: ["exec", "-t", "fullcycle_app", "/usr/local/bin/composer", "install"]
@@ -18,3 +26,7 @@ steps:
 - id: "Rodando php artisan key:generate"
   name: "gcr.io/cloud-builders/docker"
   args: ["exec", "-t", "fullcycle_app", "php", "/var/www/artisan", "key:generate"]
+
+- id: "Rodando phpunit"
+  name: "gcr.io/cloud-builders/docker"
+  args: ["exec", "-t", "fullcycle_app", "php", "/var/www/vendor/bin/phpunit", "-c", "/var/www/phpunit.xml"]

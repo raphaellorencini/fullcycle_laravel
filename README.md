@@ -3,3 +3,6 @@
 
 ## Imagem com a mensagem rodando em Golang: "Code.education Rocks!"
 <a href="https://hub.docker.com/r/raphaellorencini/fullcycle_golang">https://hub.docker.com/r/raphaellorencini/fullcycle_golang</a>
+
+## GCP Dockerfile"
+O Dockerfile que roda no Container Registry do GCP está dentro de .docker/cloudbuild/

@@ -6,7 +6,7 @@ networks:
 
 services:
     fullcycle_app:
-        build: .
+        build: .docker/cloudbuild
         container_name: fullcycle_app
         volumes:
           - .:/var/www

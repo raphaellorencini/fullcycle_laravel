@@ -9,4 +9,12 @@ steps:
 
 - id: "Rodando composer"
   name: "gcr.io/cloud-builders/docker"
-  args: ["exec", "-t", "fullcycle_app", "composer", "install"]
+  args: ["exec", "-t", "fullcycle_app", "/usr/local/bin/composer", "install"]
+
+- id: "Copiando .env"
+  name: "gcr.io/cloud-builders/docker"
+  args: ["exec", "-t", "fullcycle_app", "cp", ".env.example", ".env"]
+
+- id: "Rodando php artisan key:generate"
+  name: "gcr.io/cloud-builders/docker"
+  args: ["exec", "-t", "fullcycle_app", "php", "/var/www/artisan", "key:generate"]

@@ -7,13 +7,13 @@ steps:
   name: "gcr.io/cloud-builders/docker"
   args: ["ps"]
 
-- id: "Criando vendor"
-  name: "gcr.io/cloud-builders/docker"
-  args: ["exec", "-u", "root", "-t", "fullcycle_app", "mkdir", "/var/www/vendor"]
+# - id: "Criando vendor"
+#   name: "gcr.io/cloud-builders/docker"
+#   args: ["exec", "-u", "root", "-t", "fullcycle_app", "mkdir", "/var/www/vendor"]
 
-- id: "Permissão 755 para vendor"
-  name: "gcr.io/cloud-builders/docker"
-  args: ["exec", "-u", "root", "-t", "fullcycle_app", "chmod", "-R", "755", "/var/www/vendor"]
+# - id: "Permissão 755 para vendor"
+#   name: "gcr.io/cloud-builders/docker"
+#   args: ["exec", "-u", "root", "-t", "fullcycle_app", "chmod", "-R", "755", "/var/www/vendor"]
 
 - id: "Rodando composer"
   name: "gcr.io/cloud-builders/docker"

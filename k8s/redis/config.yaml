@@ -39,4 +39,4 @@ spec:
     tier: db
   ports:
   - port: 6379
-    targetPort: 6379
+    #targetPort: 6379

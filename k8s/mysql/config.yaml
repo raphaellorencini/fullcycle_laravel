@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-pass
+type: Opaque
+data:
+  password: MTIzNDU2
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "1Gi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-server
+
+#Spec do deployment
+spec:
+  replicas: 1
+  
+  #Selector parar criar um novo service
+  selector:
+    matchLabels:
+      app: mysql-server
+      tier: db
+
+  #Configuração para os pods
+  template:
+    metadata:
+      labels:
+        app: mysql-server
+        tier: db
+
+    #Specs de pods
+    spec:
+      containers:
+      - image: mysql:5.7
+        name: mysql-server
+        args:
+        - "--ignore-db-dir=lost+found"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        # resources:
+        #   limits:
+        #     memory: "256Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim #nome do volume persistente criado no arquivo persistent-volume.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql-server
+    tier: db
+  ports:
+  - port: 3306
+    targetPort: 3306
+  clusterIP: None

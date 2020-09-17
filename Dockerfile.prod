@@ -2,7 +2,9 @@ FROM php:7.4-fpm-alpine
 
 RUN apk add --no-cache shadow openssl bash mysql-client nodejs npm
 RUN docker-php-ext-install pdo pdo_mysql
-#RUN pecl install redis && docker-php-ext-enable redis
+RUN apk add --update --no-cache autoconf g++ make \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 WORKDIR /var/www
 RUN rm -rf /var/www/html

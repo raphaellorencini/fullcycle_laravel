@@ -21,8 +21,8 @@ spec:
     #Specs de pods
     spec:
       containers:
-      - image: redis
-        name: master
+      - name: master
+        image: redis
         ports:
         - containerPort: 6379
 ---
@@ -36,7 +36,7 @@ metadata:
 spec:
   selector:
     app: redis
-    tier: db
+    role: master
   ports:
   - port: 6379
-    #targetPort: 6379
+    targetPort: 6379
